@@ -10,7 +10,7 @@ print(ds_info)
 tfds.show_examples(train_ds, ds_info)
 
 # Preprocess the dataset
-def preprocess(dataset):
+def preprocess(dataset, batch):
     # Convert the images and labels to floating-point numbers
     dataset = dataset.map(lambda x, y: (tf.cast(x, tf.float32), y))
     # Flatten the images
@@ -24,20 +24,10 @@ def preprocess(dataset):
     # Shuffle the dataset
     dataset = dataset.shuffle(1000)
     # Create batches of 32
-    dataset = dataset.batch(32)
+    dataset = dataset.batch(batch)
     # Prefetch the next batch
     dataset = dataset.prefetch(20)
     return dataset
-
-train_ds = train_ds.apply(preprocess)
-test_ds = test_ds.apply(preprocess)
-
-# Build a fully connected feed-forward neural network
-model = tf.keras.Sequential([
-    tf.keras.layers.Dense(256, activation='relu'),
-    tf.keras.layers.Dense(256, activation='relu'),
-    tf.keras.layers.Dense(10, activation='softmax')
-])
 
 # Define a training loop function
 def train_model(epochs, model, train_ds, test_ds, loss, optimizer, metric):
@@ -47,11 +37,22 @@ def train_model(epochs, model, train_ds, test_ds, loss, optimizer, metric):
     history = model.fit(train_ds, epochs=epochs, validation_data=test_ds)
     return history
 
+# Build a fully connected feed-forward neural network
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(256, activation='relu'),
+    tf.keras.layers.Dense(256, activation='relu'),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+
 # Define hyperparameters and initialize
 epochs = 10
 learning_rate = 0.001
 loss = tf.keras.losses.CategoricalCrossentropy()
 optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate)
+
+# Preprocess the training and test datasets
+train_ds = train_ds.apply(lambda x: preprocess(x, 32))
+test_ds = test_ds.apply(lambda x: preprocess(x, 32))
 
 # Train the model
 history = train_model(epochs, model, train_ds, test_ds, loss, optimizer, 'accuracy')
