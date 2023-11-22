@@ -23,7 +23,7 @@ def preprocess(dataset, batch):
     dataset = dataset.cache()
     # Shuffle the dataset
     dataset = dataset.shuffle(1000)
-    # Create batches of 32
+    # Create batches
     dataset = dataset.batch(batch)
     # Prefetch the next batch
     dataset = dataset.prefetch(20)
@@ -39,8 +39,9 @@ def train_model(epochs, model, train_ds, test_ds, loss, optimizer, metric):
 
 # Build a fully connected feed-forward neural network
 model = tf.keras.Sequential([
-    tf.keras.layers.Dense(256, activation='relu'),
-    tf.keras.layers.Dense(256, activation='relu'),
+    tf.keras.layers.Input(shape=(784,)),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dense(64, activation='relu'),
     tf.keras.layers.Dense(10, activation='softmax')
 ])
 
@@ -48,11 +49,11 @@ model = tf.keras.Sequential([
 epochs = 10
 learning_rate = 0.001
 loss = tf.keras.losses.CategoricalCrossentropy()
-optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate)
+optimizer = tf.keras.optimizers.Adam(learning_rate)
 
 # Preprocess the training and test datasets
-train_ds = train_ds.apply(lambda x: preprocess(x, 32))
-test_ds = test_ds.apply(lambda x: preprocess(x, 32))
+train_ds = train_ds.apply(lambda x: preprocess(x, 128))
+test_ds = test_ds.apply(lambda x: preprocess(x, 128))
 
 # Train the model
 history = train_model(epochs, model, train_ds, test_ds, loss, optimizer, 'accuracy')
