@@ -92,8 +92,8 @@ learning_rate1 = 0.001
 learning_rate2 = 0.01
 optimizer1 = tf.keras.optimizers.Adam(learning_rate=learning_rate1)
 optimizer2 = tf.keras.optimizers.Adam(learning_rate=learning_rate2)
-optimizer3 = tf.keras.optimizers.SGD(learning_rate=learning_rate1)
-optimizer4 = tf.keras.optimizers.SGD(learning_rate=learning_rate2)
+optimizer3 = tf.keras.optimizers.experimental.SGD(learning_rate=learning_rate1)
+optimizer4 = tf.keras.optimizers.experimental.SGD(learning_rate=learning_rate2)
 
 # Preprocess the data
 train_ds = preprocess(train_ds)
