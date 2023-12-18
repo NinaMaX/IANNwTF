@@ -65,8 +65,10 @@ model1 = tf.keras.Sequential([
     tf.keras.layers.Reshape((32, 32, 3), input_shape=(3072,)),
     tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
     tf.keras.layers.MaxPooling2D((2, 2)),
+    tf.keras.layers.Dropout(0.2),
     tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
     tf.keras.layers.MaxPooling2D((2, 2)),
+    tf.keras.layers.Dropout(0.2),
     tf.keras.layers.Flatten(),
     tf.keras.layers.Dense(64, activation='relu'),
     tf.keras.layers.Dense(10, activation='softmax'),
@@ -75,14 +77,14 @@ model1 = tf.keras.Sequential([
 # CNN Architecture 2
 model2 = tf.keras.Sequential([
     tf.keras.layers.Reshape((32, 32, 3), input_shape=(3072,)),
-    tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+    tf.keras.layers.Conv2D(32, (3, 3), activation='sigmoid'),
     tf.keras.layers.MaxPooling2D((2, 2)),
     tf.keras.layers.Dropout(0.2),
-    tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+    tf.keras.layers.Conv2D(64, (3, 3), activation='sigmoid'),
     tf.keras.layers.MaxPooling2D((2, 2)),
     tf.keras.layers.Dropout(0.2),
     tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(64, activation='relu'),
+    tf.keras.layers.Dense(64, activation='sigmoid'),
     tf.keras.layers.Dense(10, activation='softmax'),
 ])
 
@@ -92,8 +94,8 @@ learning_rate1 = 0.001
 learning_rate2 = 0.01
 optimizer1 = tf.keras.optimizers.Adam(learning_rate=learning_rate1)
 optimizer2 = tf.keras.optimizers.Adam(learning_rate=learning_rate2)
-optimizer3 = tf.keras.optimizers.experimental.SGD(learning_rate=learning_rate1)
-optimizer4 = tf.keras.optimizers.experimental.SGD(learning_rate=learning_rate2)
+optimizer3 = tf.keras.optimizers.Adagrad(learning_rate=learning_rate1)
+optimizer4 = tf.keras.optimizers.Adagrad(learning_rate=learning_rate2)
 
 # Preprocess the data
 train_ds = preprocess(train_ds)
