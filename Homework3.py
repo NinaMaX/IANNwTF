@@ -60,10 +60,10 @@ def train_model(model, train_ds, test_ds, loss, optimizer):
     print('Test Accuracy: {}'.format(accuracy))
     return model
 
-# CNN Architecture 1 - Conv2D
-class Conv2D(tf.keras.Model):
+# CNN Architecture 1
+class Architecture1(tf.keras.Model):
     def __init__(self):
-        super(Conv2D, self).__init__()
+        super(Architecture1, self).__init__()
         self.conv1 = tf.keras.layers.Conv2D(32, 3, activation='relu')
         self.batch1 = tf.keras.layers.BatchNormalization()
         self.pool1 = tf.keras.layers.MaxPool2D()
@@ -95,19 +95,19 @@ class Conv2D(tf.keras.Model):
         x = self.fc2(x)
         return x
     
-# CNN Architecture 2 - MaxPool2D
-class MaxPool2D(tf.keras.Model):
+# CNN Architecture 2 
+class Architecture2(tf.keras.Model):
     def __init__(self):
-        super(MaxPool2D, self).__init__()
+        super(Architecture2, self).__init__()
         self.conv1 = tf.keras.layers.Conv2D(32, 3, activation='relu')
         self.batch1 = tf.keras.layers.BatchNormalization()
-        self.pool1 = tf.keras.layers.MaxPool2D()
+        self.pool1 = tf.keras.layers.AveragePooling2D()
         self.conv2 = tf.keras.layers.Conv2D(64, 3, activation='relu')
         self.batch2 = tf.keras.layers.BatchNormalization()
-        self.pool2 = tf.keras.layers.MaxPool2D()
+        self.pool2 = tf.keras.layers.AveragePooling2D()
         self.conv3 = tf.keras.layers.Conv2D(128, 3, activation='relu')
         self.batch3 = tf.keras.layers.BatchNormalization()
-        self.pool3 = tf.keras.layers.MaxPool2D()
+        self.pool3 = tf.keras.layers.AveragePooling2D()
         self.flatten = tf.keras.layers.Flatten()
         self.fc1 = tf.keras.layers.Dense(128, activation='relu')
         self.dropout = tf.keras.layers.Dropout(0.5)
@@ -140,24 +140,23 @@ optimizer3 = tf.keras.optimizers.Adagrad(learning_rate=learning_rate1)
 optimizer4 = tf.keras.optimizers.Adagrad(learning_rate=learning_rate2)
 
 # Preprocess the data
-train_ds = preprocess(train_ds)
-test_ds = preprocess(test_ds)
+train_dataset = train_ds.apply(preprocess)
+test_dataset = test_ds.apply(preprocess)
 
 # Train the models
-Conv2D = Conv2D()
-setup1 = train_model(Conv2D, train_ds, test_ds, loss, optimizer1)
-
-setup2 = train_model(Conv2D, train_ds, test_ds, loss, optimizer2)
-
-setup3 = train_model(Conv2D, train_ds, test_ds, loss, optimizer3)
-
-setup4 = train_model(Conv2D, train_ds, test_ds, loss, optimizer4)
-
-MaxPool2D = MaxPool2D()
-setup5 = train_model(MaxPool2D, train_ds, test_ds, loss, optimizer1)
-
-setup6 = train_model(MaxPool2D, train_ds, test_ds, loss, optimizer2)
-
-setup7 = train_model(MaxPool2D, train_ds, test_ds, loss, optimizer3)
-
-setup8 = train_model(MaxPool2D, train_ds, test_ds, loss, optimizer4)
+model1 = Architecture1()
+model1 = train_model(model1, train_dataset, test_dataset, loss, optimizer1)
+model2 = Architecture1()
+model2 = train_model(model2, train_dataset, test_dataset, loss, optimizer2)
+model3 = Architecture1()
+model3 = train_model(model3, train_dataset, test_dataset, loss, optimizer3)
+model4 = Architecture1()
+model4 = train_model(model4, train_dataset, test_dataset, loss, optimizer4)
+model5 = Architecture2()
+model5 = train_model(model5, train_dataset, test_dataset, loss, optimizer1)
+model6 = Architecture2()
+model6 = train_model(model6, train_dataset, test_dataset, loss, optimizer2)
+model7 = Architecture2()
+model7 = train_model(model7, train_dataset, test_dataset, loss, optimizer3)
+model8 = Architecture2()
+model8 = train_model(model8, train_dataset, test_dataset, loss, optimizer4)
